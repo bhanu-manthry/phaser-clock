@@ -12,6 +12,5 @@ function textRef() {
     timeText.addColor('#3F51B5', 7);
     timeText.addColor('#3F51B5', 8);
     timeText.addColor('#4E342E', 10);
-
     return timeText
 }
