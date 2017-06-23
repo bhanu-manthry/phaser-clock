@@ -6,7 +6,7 @@ var game = new Phaser.Game(700,700, Phaser.AUTO, 'mycanvas', {
 
 var centerX, centerY;
 var clock, hoursHand, minutesHand, secondsHand, pendulum;
-var timeText = now = null;
+var timeText = now = moment();
 
 function preload() {
     // all the required assets should be loaded here
@@ -22,9 +22,8 @@ function preload() {
 }
 
 function create() {
-    game.stage.backgroundColor = 0xffffff;
     // game one time execution logic should be here
-    textRef();
+    game.stage.backgroundColor = 0xffffff;
 
     // create a new sprite and store in pendulum var
     pendulum = game.add.sprite(centerX, centerY, 'pendulum');
@@ -46,31 +45,47 @@ function create() {
     oscillation.to({angle: -15}, 1000, null, true, 0, -1, true);
     oscillation.start();
 
+    // create graphics object
     var g1 = game.add.graphics(0,0);
+
+    // create a circle in g1 object
     g1.beginFill(0xFFE0B2, 1)
-    g1.drawCircle(centerX, centerY, 350);
+    g1.drawCircle(centerX, centerY, 370);
     g1.endFill();
-
-    secondsHand = game.add.sprite(centerX, centerY, 'secondsHand');
-    secondsHand.anchor.set(0.5);
-    secondsHand.scale.set(0.48);
-
-    minutesHand = game.add.sprite(centerX, centerY, 'minutesHand'),
-    minutesHand.anchor.set(0.5);
-    minutesHand.scale.set(0.48);
 
     hoursHand = game.add.sprite(centerX, centerY, 'hoursHand');
     hoursHand.anchor.set(0.5);
-    hoursHand.scale.set(0.8);
+    hoursHand.scale.set(0.3);
+
+    minutesHand = game.add.sprite(centerX, centerY, 'minutesHand'),
+    minutesHand.anchor.set(0.5);
+    minutesHand.scale.set(0.45);
+
+    secondsHand = game.add.sprite(centerX, centerY, 'secondsHand');
+    secondsHand.anchor.set(0.5);
+
+    setClockHands();
+
+    var secondsHandTween = game.add.tween(secondsHand);
+    secondsHandTween.to({angle: 360}, 1000 * 60, null, true, 0, -1, false);
+
+    var minutesHandTween = game.add.tween(minutesHand);
+    minutesHandTween.to({angle: 360}, 1000 * 60 * 60, null, true, 0, -1, false);
+
+    var hoursHandTween = game.add.tween(hoursHand);
+    hoursHandTween.to({angle: 360}, 1000 * 60 * 60 * 12, null, true, 0, -1, false);
 
     clock = game.add.sprite(centerX, centerY, 'clock');
     clock.anchor.set(0.5);
-    clock.scale.set(0.7);
+    clock.scale.set(0.4);
+
+    // timeText = textRef();
+    // // bring text to top
+    // game.world.bringToTop(timeText);
 
     setInterval(function() {
-        now = moment().format('hh:mm:ss');
-        timeText.text = now;
-        secondsHand.rotation += 0.0872665;
+        now = moment();
+        timeText.text = now.format('hh:mm:ss');
     }, 1000);
 }
 
@@ -79,21 +94,10 @@ function update() {
     // minutesHand.angle += 0.5;
 }
 
-function textRef() {
-    timeText = game.add.text(centerX, 100, 'time', {
-        font: '40px Arial',
-        fill: 'red',
-        align: 'center'
-    });
-
-    timeText.anchor.set(0.5);
-    timeText.setShadow(2, 2, 'rgba(0, 0, 0, 0.5)', 4);
-    timeText.addColor('#ff00fe', 2);
-    timeText.addColor('#3F51B5', 7);
-    timeText.addColor('#3F51B5', 8);
-    timeText.addColor('#4E342E', 10);
-}
-
 function setClockHands() {
-
+    var d = 6;
+    secondsHand.angle = d * now.seconds();
+    minutesHand.angle = d * now.minutes();
+    hoursHand.angle = (360/12) * now.hours();
+    console.log('came here');
 }
