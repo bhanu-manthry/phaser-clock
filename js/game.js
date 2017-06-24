@@ -4,9 +4,8 @@ var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '
     update: update
 });
 
-var centerX, centerY;
-var clock, hoursHand, minutesHand, secondsHand, pendulum;
-var timeText = now = moment();
+// all these variables are used across all javascript files;
+var centerX, centerY, weather;
 
 function preload() {
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -17,6 +16,9 @@ function preload() {
     game.load.image('secondsHand', 'img/second_hand.png');
     game.load.image('pendulum', 'img/pendulum.png');
     game.load.image('clock', 'img/clock.png');
+    game.load.image('sunnyWeather', 'img/sunny-weather.jpg');
+    game.load.image('thunderstrom', 'img/thunderstrom.jpg');
+    game.load.image('scatteredClouds', 'img/scattered_clouds.png');
 
     centerX = game.world.centerX;
     centerY = game.world.centerY;
@@ -25,7 +27,10 @@ function preload() {
 }
 
 function create() {
-    game.state.start('ClockState');
+    $.get('http://api.openweathermap.org/data/2.5/weather?q=Hyderabad,in&units=metric&appid=d97922415f1fc5acbb53332be3df3226', function(res) {
+        weather = res;
+        game.state.start('ClockState');
+    });
 }
 
 function update() {

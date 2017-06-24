@@ -1,17 +1,24 @@
 // clock state definition
 // this state is loaded by game
 var ClockState = function() {
-
 };
 
 // ClockState.prototype should have atleast one of the preload, create, update functions
 
 ClockState.prototype = (function() {
     var state = this;
+    var clock, hoursHand, minutesHand, secondsHand, pendulum;
+    var timeText = now = moment(), dateText;
+
+    var preload = function() {
+
+    };
 
     var create = function() {
         // game one time execution logic should be here
         game.stage.backgroundColor = 0xffffff;
+
+        swapImages();
 
         // create a new sprite and store in pendulum var
         pendulum = game.add.sprite(centerX, centerY, 'pendulum');
@@ -58,29 +65,28 @@ ClockState.prototype = (function() {
         clock.anchor.set(0.5);
         clock.scale.set(0.4);
 
-        timeText = game.add.text(centerX, centerY - 60, '');
-        timeText.anchor.set(0.5);
-        // bring text to top
-        game.world.bringToTop(timeText);
+        // showing weather data
+        textRef();
 
-        var dateText = game.add.text(centerX, centerY + 60, 'sdklfj');
-        dateText.anchor.set(0.5);
-        dateText.text = now.format('Do MMM, YYYY');
+        timeText = textBox(centerX, centerY - 60, 'some text');
+        dateText = textBox(centerX, centerY + 60, 'sdklfj');
+        dateText.setText(now.format('Do MMM, YYYY'));
 
         setInterval(function() {
             now = moment();
-            timeText.text = now.format('hh:mm:ss');
+            timeText.setText(now.format('hh:mm:ss'));
             secondsHand.angle += 6;
 
             if(now.seconds() === 0) {
                 minutesHand.angle += 6;
                 hoursHand.angle += 0.5;
 
-                dateText.text = now.format('Do MMM, YYYY');
+                dateText.setText(now.format('Do MMM, YYYY'));
             }
         }, 1000);
 
-        textRef();
+        game.forceSingleUpdate = true;
+        game.renderer.renderSession.roundPixels = true;
     };
 
     function setClockHands() {
@@ -88,10 +94,10 @@ ClockState.prototype = (function() {
         secondsHand.angle = d * now.seconds();
         minutesHand.angle = d * now.minutes();
         hoursHand.angle = (360/720) * ((parseInt(now.format('h')) * 60) + now.minutes());
-        console.log('came here');
     }
 
     return {
+        preload: preload,
         create: create
     };
 })();
