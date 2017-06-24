@@ -54,35 +54,42 @@ ClockState.prototype = (function() {
 
         setClockHands();
 
-        var secondsHandTween = game.add.tween(secondsHand);
-        secondsHandTween.to({angle: 360}, 1000 * 60, null, true, 0, -1, false);
-
-        var minutesHandTween = game.add.tween(minutesHand);
-        minutesHandTween.to({angle: 360}, 1000 * 60 * 60, null, true, 0, -1, false);
-
-        var hoursHandTween = game.add.tween(hoursHand);
-        hoursHandTween.to({angle: 360}, 1000 * 60 * 60 * 12, null, true, 0, -1, false);
-
         clock = game.add.sprite(centerX, centerY, 'clock');
         clock.anchor.set(0.5);
         clock.scale.set(0.4);
 
-        timeText = textRef();
+        timeText = game.add.text(centerX, centerY - 60, '');
+        timeText.anchor.set(0.5);
         // bring text to top
         game.world.bringToTop(timeText);
 
-        var tempText = textBox(centerX, 10, 'hello');
-
+        var dateText = game.add.text(centerX, centerY + 60, 'sdklfj');
+        dateText.anchor.set(0.5);
+        dateText.text = now.format('Do MMM, YYYY');
 
         setInterval(function() {
             now = moment();
             timeText.text = now.format('hh:mm:ss');
+            secondsHand.angle += 6;
+
+            if(now.seconds() === 0) {
+                minutesHand.angle += 6;
+                hoursHand.angle += 0.5;
+
+                dateText.text = now.format('Do MMM, YYYY');
+            }
         }, 1000);
 
-        $.get('http://api.openweathermap.org/data/2.5/weather?q=Hyderabad,in&units=metric&appid=d97922415f1fc5acbb53332be3df3226', function(res) {
-            tempText.text = res.main.temp;
-        });
+        textRef();
     };
+
+    function setClockHands() {
+        var d = 6;
+        secondsHand.angle = d * now.seconds();
+        minutesHand.angle = d * now.minutes();
+        hoursHand.angle = (360/720) * ((parseInt(now.format('h')) * 60) + now.minutes());
+        console.log('came here');
+    }
 
     return {
         create: create

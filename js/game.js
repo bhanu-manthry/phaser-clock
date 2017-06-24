@@ -1,4 +1,4 @@
-var game = new Phaser.Game(700,700, Phaser.AUTO, 'mycanvas', {
+var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, 'mycanvas', {
     preload: preload,
     create: create,
     update: update
@@ -9,6 +9,7 @@ var clock, hoursHand, minutesHand, secondsHand, pendulum;
 var timeText = now = moment();
 
 function preload() {
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     // all the required assets should be loaded here
     game.load.spritesheet('earth', 'img/earth.png', 100, 100);
     game.load.image('hoursHand', 'img/hours_hand.png');
@@ -30,12 +31,4 @@ function create() {
 function update() {
     // this function is in an infinite loop internally
     // minutesHand.angle += 0.5;
-}
-
-function setClockHands() {
-    var d = 6;
-    secondsHand.angle = d * now.seconds();
-    minutesHand.angle = d * now.minutes();
-    hoursHand.angle = (360/720) * ((parseInt(now.format('h')) * 60) + now.minutes());
-    console.log('came here');
 }
