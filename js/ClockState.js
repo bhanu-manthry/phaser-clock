@@ -18,6 +18,8 @@ ClockState.prototype = (function() {
         // game one time execution logic should be here
         game.stage.backgroundColor = 0xffffff;
 
+        var clockX = centerX,
+            clockY = centerY - 100;
         swapImages();
 
         // create a new sprite and store in pendulum var
@@ -45,31 +47,31 @@ ClockState.prototype = (function() {
 
         // create a circle in g1 object
         g1.beginFill(0xFFE0B2, 1)
-        g1.drawCircle(centerX, centerY, 370);
+        g1.drawCircle(centerX, centerY-100, 370);
         g1.endFill();
 
-        hoursHand = game.add.sprite(centerX, centerY, 'hoursHand');
+        hoursHand = game.add.sprite(clockX, clockY, 'hoursHand');
         hoursHand.anchor.set(0.5);
         hoursHand.scale.set(0.3);
 
-        minutesHand = game.add.sprite(centerX, centerY, 'minutesHand'),
+        minutesHand = game.add.sprite(clockX, clockY, 'minutesHand'),
         minutesHand.anchor.set(0.5);
         minutesHand.scale.set(0.45);
 
-        secondsHand = game.add.sprite(centerX, centerY, 'secondsHand');
+        secondsHand = game.add.sprite(clockX, clockY, 'secondsHand');
         secondsHand.anchor.set(0.5);
 
         setClockHands();
 
-        clock = game.add.sprite(centerX, centerY, 'clock');
+        clock = game.add.sprite(clockX, clockY, 'clock');
         clock.anchor.set(0.5);
         clock.scale.set(0.4);
 
         // showing weather data
         textRef();
 
-        timeText = textBox(centerX, centerY - 60, 'some text');
-        dateText = textBox(centerX, centerY + 60, 'sdklfj');
+        timeText = textBox(centerX, centerY - 160, 'some text');
+        dateText = textBox(centerX, centerY - 40, 'sdklfj');
         dateText.setText(now.format('Do MMM, YYYY'));
 
         setInterval(function() {
